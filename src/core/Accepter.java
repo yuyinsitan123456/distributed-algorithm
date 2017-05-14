@@ -13,6 +13,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import util.CommClient;
+
 
 public class Accepter {
 	static class Instance{
@@ -42,5 +44,18 @@ public class Accepter {
 	//accepter's id
 	private transient int id;
 	//proposals
+	private transient List<InfoObject> proposals;
+	//my conf
+	private transient InfoObject my;
+	//store the last success sumbmitted instance
+	private int lastInstanceId = 0;
+	//config
+	private ConfObject confObject = 0;
+	//initial gson
+	private Gson gson = new Gson();
+	//client
+	private CommClient client;
+	
+	//msgQueue, storing on 
 	
 }

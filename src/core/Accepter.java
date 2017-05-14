@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import message.Packet;
+import message.Packetbox;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -56,6 +59,22 @@ public class Accepter {
 	//client
 	private CommClient client;
 	
-	//msgQueue, storing on 
+	//msgQueue, storing on packetbox
+	private BlockingQueue<packetbox> msgQueue = new LinkedBlockingQueue<>();
+	
+	public Accepter(int id, List<InfoObject> proposals, InfoObject my, ConfObject confObject, CommClient client){
+		this.id = id;
+		this.proposals = proposals;
+		this.my = my;
+		this.confObject = confObject;
+		this.client = client;
+		
+		instanceRecover();
+		new Thread(()->{
+			while (true){
+				msgbox msg = msgQueue.take();
+			}
+		})
+	}
 	
 }

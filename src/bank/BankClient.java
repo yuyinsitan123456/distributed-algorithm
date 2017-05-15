@@ -1,17 +1,25 @@
 package bank;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 
 public class BankClient {
 	private String clientID;
-	private Socket clientSocket;
-	public BankClient(String clientID, Socket clientSocket) {
+	private  Socket clientSocket;
+	private BufferedReader in;
+	private BufferedWriter out;
+	public BankClient() throws UnsupportedEncodingException, IOException {
 		super();
-		this.clientID = clientID;
-		this.clientSocket = clientSocket;
+		this.clientID = "JZ";
+		this.clientSocket = new Socket("localhost", 33333);
+		this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+		this.out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"));
 	}
 	public String getClientID() {
 		return clientID;
@@ -25,6 +33,22 @@ public class BankClient {
 	}
 	public void setClientSocket(Socket clientSocket) {
 		this.clientSocket = clientSocket;
+	}
+	public BufferedReader getIn() {
+		return in;
+	}
+	public BufferedWriter getOut() {
+		return out;
+	}
+	public void StartListen(){
+		try{
+	
+			//create a thread to receive the server's message
+			Thread receiveThread = new Thread(new MessageReceiveThread(clientSocket,in));
+			receiveThread.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	

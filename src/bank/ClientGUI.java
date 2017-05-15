@@ -46,6 +46,9 @@ public class ClientGUI extends JFrame {
 				try {
 					ClientGUI mainframe = new ClientGUI();
 					mainframe.setVisible(true);
+					client = new BankClient();
+					in = client.getIn();
+					out = client.getOut();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -59,17 +62,6 @@ public class ClientGUI extends JFrame {
 	 * @throws UnknownHostException 
 	 */
 	public ClientGUI() {
-		try{
-			Socket clientSocket = new Socket("localhost", 33333);
-			client = new BankClient("JZ",clientSocket);
-			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
-			out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"));
-			//create a thread to receive the server's message
-			Thread receiveThread = new Thread(new MessageReceiveThread(clientSocket,in));
-			receiveThread.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));

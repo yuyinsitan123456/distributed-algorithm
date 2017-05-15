@@ -15,8 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import static bank.ClientGUI.out;
 import com.google.gson.Gson;
+
+import paxosMessage.Message;
+import paxosMessage.MessagePacket;
+import paxosMessage.Promise;
+import paxosUtils.RoleType;
 
 import javax.swing.JOptionPane;
 
@@ -126,7 +130,10 @@ public class DepositGUI extends JFrame {
 	//deposit operation: sending deposit amount to server and receive results
 	
 	public void depositOperation(int depositAmount) throws UnknownHostException, IOException{
-		ClientGUI.sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount))));
+		Gson gson = new Gson();
+		Message message = new Message("BankMessage",
+				gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount))));
+		ClientGUI.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 		//String message = "1#deposit#"+depositAmount;
 		//try {
 		//	out.writeUTF(message);

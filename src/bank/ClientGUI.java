@@ -1,13 +1,12 @@
 package bank;
 
-import static Client.LoginGUI.in;
-import static Client.LoginGUI.out;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,13 +16,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 
+import com.github.luohaha.paxos.main.MyPaxosClient;
+import main.MyPaxosClient;
 
 
 public class ClientGUI extends JFrame {
+	
+	public static DataInputStream in;
+    public static DataOutputStream out;
+    
+    public static MyPaxosClient client;
 
 	JTextPane resultPane;
 	String result = "";
 	String accName= "";
+	
+
 
 	/**
 	 * Launch the application.
@@ -45,6 +53,8 @@ public class ClientGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ClientGUI() {
+		
+		client = new MyPaxosClient("localhost", 33333);
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));
 		setBounds(100, 100, 453, 336);
@@ -90,9 +100,7 @@ public class ClientGUI extends JFrame {
 		JButton btnTransfer = new JButton("Transfer");
 		btnTransfer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-                TransferGUI transferFrame = new TransferGUI();
-                transferFrame.setVisible(true);
+
 			}
 		});
 		btnTransfer.setFont(new Font("Arial", Font.PLAIN, 14));

@@ -1,6 +1,6 @@
 package bank;
 
-import static Client.LoginGUI.out;
+
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import com.google.gson.Gson;
 
 public class WithdrawGUI extends JFrame {
 
@@ -60,7 +62,7 @@ public class WithdrawGUI extends JFrame {
 		JButton btnEnter = new JButton("Enter");
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				withdrawOperation(withdrawAmount.getText());
+				withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
 				
 				if (!result.equals(null)) {
 					JOptionPane.showMessageDialog(mainFrame, "Withdraw Done!");
@@ -91,7 +93,8 @@ public class WithdrawGUI extends JFrame {
 	}
 	
 	//withdraw operation: sending withdraw amount to server and receive results
-	public void withdrawOperation(String withdrawAmount){
+	public void withdrawOperation(int withdrawAmount){
+		client.submit(new Gson().toJson(new BankMessage("accountName", "ithdraw", withdrawAmount)), 1);
 		String message = "2#withdraw#"+withdrawAmount;
 		try {
 			out.writeUTF(message);

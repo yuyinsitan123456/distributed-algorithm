@@ -5,13 +5,13 @@ public class BankMessage {
 	private String operate;
 	private double amount;
 	private double balance;
-	public BankMessage(String account, String operate, double amount, double balance) {
+	public BankMessage(String account, String operate, double amount) {
 		super();
 		this.account = account;
 		this.operate = operate;
 		this.amount = amount;
-		this.balance = balance;
 	}
+	
 	public String getAccount() {
 		return account;
 	}

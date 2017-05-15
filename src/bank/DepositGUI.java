@@ -1,7 +1,6 @@
 package bank;
 
-import static Client.LoginGUI.out;
-import static Client.LoginGUI.in;
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,6 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.github.luohaha.paxos.kvTest.MsgBean;
+import com.google.gson.Gson;
+
 import javax.swing.JOptionPane;
 
 public class DepositGUI extends JFrame {
@@ -71,7 +74,7 @@ public class DepositGUI extends JFrame {
 		JButton btnEnter = new JButton("Enter");
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				depositOperation(depositAmount.getText());
+				depositOperation(Integer.parseInt(depositAmount.getText()));
 				if (!result.equals(null)) {
 					JOptionPane.showMessageDialog(mainFrame, "Deposite Done!");
 					setVisible(false);
@@ -104,16 +107,17 @@ public class DepositGUI extends JFrame {
 	
 	//deposit operation: sending deposit amount to server and receive results
 	
-	public void depositOperation(String depositAmount){
-		String message = "1#deposit#"+depositAmount;
-		try {
-			out.writeUTF(message);
+	public void depositOperation(int depositAmount){
+		client.submit(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount)), 1);
+		//String message = "1#deposit#"+depositAmount;
+		//try {
+		//	out.writeUTF(message);
 			
-			result = in.readUTF();
+		//	result = in.readUTF();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//}
 		
 	}
 

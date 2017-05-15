@@ -27,7 +27,7 @@ public class Learner {
 
 	private Map<Integer, Map<Integer, String>> tmpState = new HashMap<>();
 
-	private int currentInstance = 1;
+	private int currentInstanceId = 1;
 
 	private Config config;
 
@@ -43,9 +43,7 @@ public class Learner {
 		this.id = id;
 		this.setConfig(config);
 		this.send = send;
-		service.scheduleAtFixedRate(() -> {
-			sendRequest(this.id, this.currentInstance);
-		} , config.getLearningTime(), config.getLearningTime(), TimeUnit.MILLISECONDS);
+		service.scheduleAtFixedRate(() -> {sendRequest(this.id, this.currentInstanceId);} , config.getLearningTime(), config.getLearningTime(), TimeUnit.MILLISECONDS);
 		new Thread(() -> {
 			while (true) {
 				try {
@@ -58,7 +56,7 @@ public class Learner {
 		}).start();
 	}
 
-	public void SetMessage(Message message) throws InterruptedException {
+	public void setMessage(Message message) throws InterruptedException {
 		this.msgQueue.put(message);
 	}
 
@@ -131,9 +129,9 @@ public class Learner {
 				} else {
 					StateMachine.changeInstanceState(instanceId,tempValue);
 				}
-				if (instanceId == currentInstance) {
+				if (instanceId == currentInstanceId) {
 					StateMachine.changeState(instanceId);
-					currentInstance++;
+					currentInstanceId++;
 				}
 			}
 		});

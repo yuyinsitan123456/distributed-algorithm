@@ -1,5 +1,6 @@
 package paxosBankAccount;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -12,6 +13,11 @@ public class StateMachine {
 	private static ConcurrentMap<Integer, Instance> instanceState = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, Object> finishedInstances = new ConcurrentHashMap<>();
 	private static String state;
+	public StateMachine(List<NodeInfo> machines){
+		for(NodeInfo machine:machines){
+			StateMachine.machines.add(machine);
+		}
+	}
 	public static NodeInfo getNodeInfo(int id) {
 		for (NodeInfo each : machines) {
 			if (id == each.getId()) {

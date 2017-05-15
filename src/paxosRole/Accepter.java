@@ -36,7 +36,7 @@ public class Accepter {
 
 	private BlockingQueue<Message> msgQueue = new LinkedBlockingQueue<>();
 
-	public Accepter(int id, NodeInfo myconf, Config config, MessageSendMethod send) {
+	public Accepter(int id, Config config, MessageSendMethod send) {
 		this.id = id;
 		this.config = config;
 		this.setSend(send);
@@ -53,7 +53,7 @@ public class Accepter {
 		}).start();
 	}
 	
-	public void SetMessage(Message message) throws InterruptedException {
+	public void setMessage(Message message) throws InterruptedException {
 		this.msgQueue.put(message);
 	}
 

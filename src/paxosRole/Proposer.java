@@ -1,7 +1,6 @@
 package paxosRole;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,7 +17,6 @@ import paxosMessage.MessagePacket;
 import paxosMessage.PrepareMessage;
 import paxosMessage.Promise;
 import paxosUtils.MessageSendMethod;
-import paxosUtils.NodeInfo;
 import paxosUtils.ProceserState;
 import paxosUtils.ProcessingInstance;
 import paxosUtils.RoleType;
@@ -42,7 +40,7 @@ public class Proposer {
 
 	private MessageSendMethod send;
 
-	public Proposer(int id, List<NodeInfo> accepters, int timeout, Accepter accepter, MessageSendMethod send) {
+	public Proposer(int id , int timeout, MessageSendMethod send) {
 		this.id = id;
 		this.timeout = timeout;
 		this.send = send;

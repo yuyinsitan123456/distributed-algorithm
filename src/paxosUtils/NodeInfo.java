@@ -1,4 +1,4 @@
-package core;
+package paxosUtils;
 
 public class NodeInfo {
 	private int id;
@@ -29,6 +29,4 @@ public class NodeInfo {
 		this.port = port;
 	}
 	
-	
-
 }

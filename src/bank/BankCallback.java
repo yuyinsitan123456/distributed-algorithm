@@ -6,14 +6,13 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import core.PaxosCallback;
 
-public class BankCallback implements PaxosCallback {
+
+public class BankCallback {
 
 	private Map<String, Double> bank = new HashMap<>();
 	private Gson gson = new Gson();
 
-	@Override
 	public void callback(String msg) {
 		
 		BankMessage message = gson.fromJson(msg, BankMessage.class);

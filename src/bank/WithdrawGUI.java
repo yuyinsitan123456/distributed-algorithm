@@ -7,6 +7,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.google.gson.Gson;
-
+import static bank.ClientGUI.out;
 public class WithdrawGUI extends JFrame {
 
 	private JPanel contentPane;
@@ -62,7 +64,18 @@ public class WithdrawGUI extends JFrame {
 		JButton btnEnter = new JButton("Enter");
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
+				try {
+					withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 				if (!result.equals(null)) {
 					JOptionPane.showMessageDialog(mainFrame, "Withdraw Done!");
@@ -93,16 +106,16 @@ public class WithdrawGUI extends JFrame {
 	}
 	
 	//withdraw operation: sending withdraw amount to server and receive results
-	public void withdrawOperation(int withdrawAmount){
-		client.submit(new Gson().toJson(new BankMessage("accountName", "ithdraw", withdrawAmount)), 1);
-		String message = "2#withdraw#"+withdrawAmount;
+	public void withdrawOperation(int withdrawAmount) throws UnknownHostException, IOException{
+		ClientGUI.sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
+		/*String message = "2#withdraw#"+withdrawAmount;
 		try {
 			out.writeUTF(message);
 			//result = in.readUTF();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 }

@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.github.luohaha.paxos.kvTest.MsgBean;
+import static bank.ClientGUI.out;
 import com.google.gson.Gson;
 
 import javax.swing.JOptionPane;
@@ -26,7 +28,8 @@ public class DepositGUI extends JFrame {
 	//private JFrame depositFrame;
 	private JTextField textField;
 	private JTextField depositAmount;
-	ClientGUI mainFrame = new ClientGUI();
+	ClientGUI mainFrame = new ClientGUI();;
+
 	
 	String result = "";
 	/**
@@ -74,12 +77,26 @@ public class DepositGUI extends JFrame {
 		JButton btnEnter = new JButton("Enter");
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				depositOperation(Integer.parseInt(depositAmount.getText()));
+				try {
+					depositOperation(Integer.parseInt(depositAmount.getText()));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				if (!result.equals(null)) {
+
 					JOptionPane.showMessageDialog(mainFrame, "Deposite Done!");
 					setVisible(false);
 					mainFrame.setVisible(true);
 					mainFrame.result = result;
+
+
 								
 				}
 			}
@@ -107,8 +124,8 @@ public class DepositGUI extends JFrame {
 	
 	//deposit operation: sending deposit amount to server and receive results
 	
-	public void depositOperation(int depositAmount){
-		client.submit(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount)), 1);
+	public void depositOperation(int depositAmount) throws UnknownHostException, IOException{
+		ClientGUI.sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount))));
 		//String message = "1#deposit#"+depositAmount;
 		//try {
 		//	out.writeUTF(message);

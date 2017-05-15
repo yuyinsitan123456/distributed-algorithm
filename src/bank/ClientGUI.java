@@ -5,8 +5,15 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,16 +23,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 
-import com.github.luohaha.paxos.main.MyPaxosClient;
-import main.MyPaxosClient;
+import com.google.gson.Gson;
+
 
 
 public class ClientGUI extends JFrame {
 	
-	public static DataInputStream in;
-    public static DataOutputStream out;
-    
-    public static MyPaxosClient client;
+	public static BufferedReader in;
+    public static BufferedWriter out;
+    public static BankClient client;
 
 	JTextPane resultPane;
 	String result = "";
@@ -51,10 +57,19 @@ public class ClientGUI extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
 	public ClientGUI() {
-		
-		client = new MyPaxosClient("localhost", 33333);
+		try{
+			Socket clientSocket = new Socket("localhost", 33333);
+			client = new BankClient("JZ",clientSocket);
+			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+			out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));
 		setBounds(100, 100, 453, 336);
@@ -111,14 +126,23 @@ public class ClientGUI extends JFrame {
 		JButton btnBanlace = new JButton("Banlace");
 		btnBanlace.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String message = "4#balance#"+accName;
+				try {
+					sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				/*String message = "4#balance#"+accName;
 				try {
 					out.writeUTF(message);
 					result = in.readUTF();
 					resultPane.setText("current balance is: "+ result+ "\n");
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				}			
+				}*/			
 			}
 		});
 		btnBanlace.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -148,6 +172,11 @@ public class ClientGUI extends JFrame {
 		lblResults.setFont(new Font("Arial", Font.PLAIN, 18));
 		lblResults.setBounds(155, 10, 72, 18);
 		panel.add(lblResults);
+	}
+//send the message to server
+	public static void sendMessage(BufferedWriter out, String msg) throws UnknownHostException, IOException {
+		out.write(msg);
+		out.flush();
 	}
 
 }

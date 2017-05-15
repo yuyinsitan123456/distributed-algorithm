@@ -73,7 +73,7 @@ public class ClientGUI extends JFrame {
 
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));
-		setBounds(100, 100, 453, 336);
+		setBounds(100, 100, 455, 359);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -109,19 +109,8 @@ public class ClientGUI extends JFrame {
 			}
 		});
 		btnWithdraw.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnWithdraw.setBounds(11, 51, 101, 35);
+		btnWithdraw.setBounds(8, 62, 101, 35);
 		panel_1.add(btnWithdraw);
-		
-		//transfer
-		JButton btnTransfer = new JButton("Transfer");
-		btnTransfer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-		btnTransfer.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnTransfer.setBounds(10, 95, 101, 35);
-		panel_1.add(btnTransfer);
 		
 		//check balance
 		JButton btnBanlace = new JButton("Banlace");
@@ -147,7 +136,7 @@ public class ClientGUI extends JFrame {
 			}
 		});
 		btnBanlace.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnBanlace.setBounds(10, 139, 101, 35);
+		btnBanlace.setBounds(8, 123, 101, 35);
 		panel_1.add(btnBanlace);
 		
 		JButton btnExit = new JButton("Exit");

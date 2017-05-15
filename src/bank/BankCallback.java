@@ -20,18 +20,22 @@ public class BankCallback implements PaxosCallback {
 		switch (message.getOperate()) {
 		case "creatAccount":
 			//System.out.println(bank.get(message.getAccount()));
+			///send response to client
 			break;
 		case "withdraw":
 			bank.put(message.getAccount(), message.getAmount());
 			//System.out.println("ok");
+			///send response to client
 			break;
 		case "deposit":
 			bank.remove(message.getAccount(), message.getAmount());
 			//System.out.println("ok");
+			///send response to client
 			break;
 		case "deleteAccount":
 			bank.remove(message.getAccount());
 			//System.out.println("ok");
+			///send response to client
 			break;
 		default:
 			break;

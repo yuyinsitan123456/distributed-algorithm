@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.border.TitledBorder;
+
+import com.github.luohaha.paxos.kvTest.KvCallback;
+import com.github.luohaha.paxos.main.MyPaxos;
+
 import javax.swing.JList;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -201,7 +206,15 @@ public class BankServerGUI {
 	
 	//create listener thread to listen client connection request
 	public void ServerStart(){
-		
+		try {
+			MyPaxos server = new MyPaxos("./conf/conf.json");
+			server.setGroupId(1, new BankCallback());
+			server.setGroupId(2, new BankCallback());
+			server.start();
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		/*try {
 	            ClientListener clientListener = new ClientListener();
 	            clientListener.start();

@@ -7,8 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,8 +20,10 @@ import com.google.gson.Gson;
 
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("serial")
 public class DepositGUI extends JFrame {
 
+	@SuppressWarnings("unused")
 	private JPanel contentPane;
 
 	//private JFrame depositFrame;

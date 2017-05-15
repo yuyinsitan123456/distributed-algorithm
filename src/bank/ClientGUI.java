@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -26,14 +24,14 @@ import javax.swing.border.TitledBorder;
 import com.google.gson.Gson;
 
 
-
+@SuppressWarnings("serial")
 public class ClientGUI extends JFrame {
 	
 	public static BufferedReader in;
     public static BufferedWriter out;
     public static BankClient client;
 
-	JTextPane resultPane;
+	static JTextPane resultPane;
 	String result = "";
 	String accName= "";
 	
@@ -66,6 +64,9 @@ public class ClientGUI extends JFrame {
 			client = new BankClient("JZ",clientSocket);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
 			out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"));
+			//create a thread to receive the server's message
+			Thread receiveThread = new Thread(new MessageReceiveThread(clientSocket,in));
+			receiveThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -178,5 +179,10 @@ public class ClientGUI extends JFrame {
 		out.write(msg);
 		out.flush();
 	}
-
+	
+//show the messages from server on textPane
+	public static void ShowMessage(String message) {
+		// TODO Auto-generated method stub
+		resultPane.setText(message);
+	}
 }

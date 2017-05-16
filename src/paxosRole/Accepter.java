@@ -100,7 +100,7 @@ public class Accepter {
 				gson.toJson(new Promise(acceptorId, instanceId, promiseType, acceptedBallot, acceptedValue)));
 		NodeInfo proposer = StateMachine.getNodeInfo(proposerId);
 		this.send.sendTo(proposer.getHost(), proposer.getPort(),
-				gson.toJson(new MessagePacket(message, RoleType.PROPOSER)).getBytes());
+				gson.toJson(new MessagePacket(message, RoleType.PROPOSER)));
 	}
 
 	public void reseivedAccept(int proposerId, int instanceId, int ballot, Object value) throws UnknownHostException, IOException {
@@ -133,7 +133,7 @@ public class Accepter {
 				gson.toJson(new Accepted(acceptorid, instanceId, acceptorType)));
 		NodeInfo proposer = StateMachine.getNodeInfo(proposerId);
 		this.send.sendTo(proposer.getHost(), proposer.getPort(),
-				gson.toJson(new MessagePacket(message, RoleType.PROPOSER)).getBytes());
+				gson.toJson(new MessagePacket(message, RoleType.PROPOSER)));
 	}
 
 	public int getLastInstanceId() {

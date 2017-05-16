@@ -64,6 +64,7 @@ public class Learner {
 			LearnRequest request = gson.fromJson(message.getInfo(), LearnRequest.class);
 			if (StateMachine.getFinishedInstances().containsKey(request.getInstanceId())){
 				String value = StateMachine.getFinishedInstances().get(request.getInstanceId()).toString();
+				System.out.println(value);
 				sendResponse(request.getId(), request.getInstanceId(), value);
 			}
 			break;
@@ -83,7 +84,7 @@ public class Learner {
 		String data = gson.toJson(new MessagePacket(message, RoleType.LEARNER));
 		StateMachine.getNodeInfo().forEach((info) -> {
 			try {
-				this.send.sendTo(info.getHost(), info.getPort(), data.getBytes());
+				this.send.sendTo(info.getHost(), info.getPort(), data);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -91,18 +92,20 @@ public class Learner {
 	}
 
 	private void sendResponse(int learnerId, int instanceId, String value) {
+		System.out.println(value);
 		NodeInfo learner = StateMachine.getNodeInfo(learnerId);
 		try {
 			Message message = new Message("LearnResponse",
 					gson.toJson(new LearnResponse(id, instanceId, value)));
 			this.send.sendTo(learner.getHost(), learner.getPort(),
-					gson.toJson(new MessagePacket(message, RoleType.LEARNER)).getBytes());
+					gson.toJson(new MessagePacket(message, RoleType.LEARNER)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void receivedResponse(int learnerId, int instanceId, String value) {
+		System.out.println(value);
 		if (!this.tmpState.containsKey(instanceId)) {
 			this.tmpState.put(instanceId, new HashMap<>());
 		}

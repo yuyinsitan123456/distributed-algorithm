@@ -102,27 +102,45 @@ public class PaxosServer {
 
 		@Override
 		public void run() {
+			BufferedReader reader = null ;
+			BufferedWriter writer = null ;
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(this.server.getInputStream()));
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.server.getOutputStream()));
+				reader = new BufferedReader(new InputStreamReader(this.server.getInputStream()));
+				writer = new BufferedWriter(new OutputStreamWriter(this.server.getOutputStream()));
 				String message;
 				while ((message = reader.readLine())!=null) {
 					this.queue.put(message);
-					while(true){
-						Object feedback=StateMachine.getClientOutput();
-						if(feedback!=null){
-							System.out.println(feedback.toString());
-							writer.write(feedback.toString());
-							writer.flush();
-							break;
+					MessagePacket messagePacket = gson.fromJson(message, MessagePacket.class);
+					System.out.println(message);
+					if(RoleType.CLIENT.equals(messagePacket.getRoleType())){
+						while(true){
+							Object feedback=StateMachine.getClientOutput();
+							if(feedback!=null){
+								System.out.println("feedback"+feedback.toString());
+								writer.write(feedback.toString());
+								writer.flush();
+								break;
+							}
 						}
 					}
+					break;
 				}
 				reader.close();
 				writer.close();
 				this.server.close();
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
+			} finally{
+				try {
+					if(reader!=null)
+						reader.close();
+					if(writer!=null)
+						writer.close();
+					if(this.server!=null)
+						this.server.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}

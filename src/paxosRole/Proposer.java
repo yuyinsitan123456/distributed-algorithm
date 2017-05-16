@@ -113,7 +113,7 @@ public class Proposer {
 			Message message = new Message("PrepareMessage", gson.toJson(new PrepareMessage(id, instanceId, ballot)));
 			String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
 			try {
-				this.send.sendTo(info.getHost(), info.getPort(), msg.getBytes());
+				this.send.sendTo(info.getHost(), info.getPort(), msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -157,7 +157,7 @@ public class Proposer {
 					gson.toJson(new AcceptRequest(id, instanceId, ballot, value)));
 			String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
 			try {
-				this.send.sendTo(info.getHost(), info.getPort(), msg.getBytes());
+				this.send.sendTo(info.getHost(), info.getPort(), msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

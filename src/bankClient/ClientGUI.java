@@ -152,6 +152,7 @@ public class ClientGUI extends JFrame {
 	public void sendMessage( String msg) throws UnknownHostException, IOException {
 		out.write(msg);
 		out.flush();
+		out.close();
 	}
 	
 	//show the messages from server on textPane
@@ -164,6 +165,8 @@ public class ClientGUI extends JFrame {
 		String message="";
 		message = in.readLine();
 		resultPane.setText(message);
+		in.close();
+		
 
 		return message;
 	}

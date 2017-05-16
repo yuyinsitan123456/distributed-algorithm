@@ -56,10 +56,12 @@ public class WithdrawGUI extends JFrame {
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
 					int withdrawNum = Integer.parseInt(withdrawAmount.getText());
+					Gson gson = new Gson();
 					Message message = new Message("BankMessage",
-							(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
+							gson.toJson(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
+					//Message message = new Message("BankMessage",
+					//		(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
 					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
 					mainFrame.getMessage();
 					

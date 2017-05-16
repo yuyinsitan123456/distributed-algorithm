@@ -1,4 +1,4 @@
-package bank;
+package bankClient;
 
 public class BankMessage {
 	private String account;

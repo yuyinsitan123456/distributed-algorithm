@@ -1,4 +1,4 @@
-package bank;
+package bankClient;
 
 
 import java.awt.EventQueue;
@@ -84,6 +84,9 @@ public class DepositGUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					depositOperation(Integer.parseInt(depositAmount.getText()));
+					JOptionPane.showMessageDialog(mainFrame, "request has been sent to server!");
+					setVisible(false);
+					mainFrame.setVisible(true);
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -94,16 +97,13 @@ public class DepositGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if (!result.equals(null)) {
+				/*if (!result.equals(null)) {
 
 					JOptionPane.showMessageDialog(mainFrame, "Deposite Done!");
 					setVisible(false);
 					mainFrame.setVisible(true);
-					mainFrame.result = result;
-
-
-								
-				}
+					mainFrame.result = result;			
+				}*/
 			}
 		});
 		btnEnter.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -134,15 +134,7 @@ public class DepositGUI extends JFrame {
 		Message message = new Message("BankMessage",
 				gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount))));
 		ClientGUI.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
-		//String message = "1#deposit#"+depositAmount;
-		//try {
-		//	out.writeUTF(message);
-			
-		//	result = in.readUTF();
-			
-		//} catch (Exception e) {
-		//	e.printStackTrace();
-		//}
+
 		
 	}
 

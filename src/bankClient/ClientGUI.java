@@ -1,4 +1,4 @@
-package bank;
+package bankClient;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -12,7 +12,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Queue;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +25,10 @@ import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 
 import com.google.gson.Gson;
+
+import paxosMessage.Message;
+import paxosMessage.MessagePacket;
+import paxosUtils.RoleType;
 
 
 @SuppressWarnings("serial")
@@ -49,6 +56,7 @@ public class ClientGUI extends JFrame {
 					client = new BankClient();
 					in = client.getIn();
 					out = client.getOut();
+					client.StartListen();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,6 +70,7 @@ public class ClientGUI extends JFrame {
 	 * @throws UnknownHostException 
 	 */
 	public ClientGUI() {
+		setTitle("Client");
 
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));
@@ -74,7 +83,7 @@ public class ClientGUI extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(19, 43, 118, 232);
+		panel_1.setBounds(10, 21, 137, 254);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -88,7 +97,7 @@ public class ClientGUI extends JFrame {
                 depositFrame.setVisible(true);
 			}
 		});
-		btnDeposit.setBounds(8, 6, 101, 35);
+		btnDeposit.setBounds(14, 21, 101, 35);
 		panel_1.add(btnDeposit);
 		
 		//withdraw
@@ -101,7 +110,7 @@ public class ClientGUI extends JFrame {
 			}
 		});
 		btnWithdraw.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnWithdraw.setBounds(8, 62, 101, 35);
+		btnWithdraw.setBounds(14, 77, 101, 35);
 		panel_1.add(btnWithdraw);
 		
 		//check balance
@@ -109,7 +118,10 @@ public class ClientGUI extends JFrame {
 		btnBanlace.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
+					Message message = new Message("BankMessage",
+							(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
+					sendMessage(new Gson().toJson((new MessagePacket(message, RoleType.CLIENT))+"\n"));
+					
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -128,7 +140,7 @@ public class ClientGUI extends JFrame {
 			}
 		});
 		btnBanlace.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnBanlace.setBounds(8, 123, 101, 35);
+		btnBanlace.setBounds(14, 138, 101, 35);
 		panel_1.add(btnBanlace);
 		
 		JButton btnExit = new JButton("Exit");
@@ -138,32 +150,30 @@ public class ClientGUI extends JFrame {
 			}
 		});
 		btnExit.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnExit.setBounds(11, 179, 101, 35);
+		btnExit.setBounds(17, 194, 101, 35);
 		panel_1.add(btnExit);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(155, 43, 231, 222);
+		scrollPane.setBounds(155, 21, 253, 244);
 		panel.add(scrollPane);
+		scrollPane.setBorder(BorderFactory.createTitledBorder("Results"));
 		
 		resultPane = new JTextPane();
 		resultPane.setFont(new Font("Arial", Font.PLAIN, 16));
 		scrollPane.setViewportView(resultPane);
-		resultPane.setText(result);
-		
-		JLabel lblResults = new JLabel("Results:");
-		lblResults.setFont(new Font("Arial", Font.PLAIN, 18));
-		lblResults.setBounds(155, 10, 72, 18);
-		panel.add(lblResults);
+		//resultPane.setText("123");
+		//resultPane.setText("456");
 	}
 //send the message to server
-	public static void sendMessage(BufferedWriter out, String msg) throws UnknownHostException, IOException {
+	public static void sendMessage( String msg) throws UnknownHostException, IOException {
 		out.write(msg);
 		out.flush();
 	}
 	
 //show the messages from server on textPane
-	public static void ShowMessage(String message) {
+	public static void ShowMessage(ArrayList messageList) {
 		// TODO Auto-generated method stub
-		resultPane.setText(message);
+		
+		resultPane.setText(messageList.toString());
 	}
 }

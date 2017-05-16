@@ -1,4 +1,6 @@
-package bank;
+package bankClient;
+
+import static bankClient.ClientGUI.out;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -14,7 +16,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import com.google.gson.Gson;
-import static bank.ClientGUI.out;
+
+import paxosMessage.Message;
+import paxosMessage.MessagePacket;
+import paxosUtils.RoleType;
 @SuppressWarnings("serial")
 public class WithdrawGUI extends JFrame {
 
@@ -61,6 +66,9 @@ public class WithdrawGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
+					JOptionPane.showMessageDialog(mainFrame, "Withdraw request has been sent to server!");
+					setVisible(false);
+					mainFrame.setVisible(true);
 				} catch (NumberFormatException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -72,11 +80,11 @@ public class WithdrawGUI extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				if (!result.equals(null)) {
-					JOptionPane.showMessageDialog(mainFrame, "Withdraw Done!");
+				/*if (!result.equals(null)) {
+					JOptionPane.showMessageDialog(mainFrame, "Withdraw request has send to server!");
 					setVisible(false);
 					mainFrame.setVisible(true);
-				}
+				}*/
 			}
 		});
 		btnEnter.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -102,7 +110,11 @@ public class WithdrawGUI extends JFrame {
 	
 	//withdraw operation: sending withdraw amount to server and receive results
 	public void withdrawOperation(int withdrawAmount) throws UnknownHostException, IOException{
-		ClientGUI.sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
+		
+		Message message = new Message("BankMessage",
+				(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
+		ClientGUI.sendMessage(new Gson().toJson((new MessagePacket(message, RoleType.CLIENT))+"\n"));
+		//ClientGUI.sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
 		/*String message = "2#withdraw#"+withdrawAmount;
 		try {
 			out.writeUTF(message);

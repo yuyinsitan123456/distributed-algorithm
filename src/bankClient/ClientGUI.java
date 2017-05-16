@@ -8,24 +8,17 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Queue;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
-
 import com.google.gson.Gson;
-
 import paxosMessage.Message;
 import paxosMessage.MessagePacket;
 import paxosUtils.RoleType;
@@ -34,9 +27,9 @@ import paxosUtils.RoleType;
 @SuppressWarnings("serial")
 public class ClientGUI extends JFrame {
 	
-	public static BufferedReader in;
-    public static BufferedWriter out;
-    public static BankClient client;
+	public  BufferedReader in;
+    public  BufferedWriter out;
+    public  BankClient client;
 
 	static JTextPane resultPane;
 	String result = "";
@@ -53,10 +46,8 @@ public class ClientGUI extends JFrame {
 				try {
 					ClientGUI mainframe = new ClientGUI();
 					mainframe.setVisible(true);
-					client = new BankClient();
-					in = client.getIn();
-					out = client.getOut();
-					client.StartListen();
+
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -70,8 +61,18 @@ public class ClientGUI extends JFrame {
 	 * @throws UnknownHostException 
 	 */
 	public ClientGUI() {
+		try {
+			client = new BankClient();
+		} catch (UnsupportedEncodingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		in = client.getIn();
+		out = client.getOut();
 		setTitle("Client");
-
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));
 		setBounds(100, 100, 455, 359);
@@ -129,14 +130,14 @@ public class ClientGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				/*String message = "4#balance#"+accName;
-				try {
-					out.writeUTF(message);
-					result = in.readUTF();
+
+				/*try {
+
+					result = in.readLine();
 					resultPane.setText("current balance is: "+ result+ "\n");
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				}*/			
+				}*/		
 			}
 		});
 		btnBanlace.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -165,15 +166,22 @@ public class ClientGUI extends JFrame {
 		//resultPane.setText("456");
 	}
 //send the message to server
-	public static void sendMessage( String msg) throws UnknownHostException, IOException {
+	public void sendMessage( String msg) throws UnknownHostException, IOException {
 		out.write(msg);
 		out.flush();
 	}
 	
 //show the messages from server on textPane
-	public static void ShowMessage(ArrayList messageList) {
-		// TODO Auto-generated method stub
+	public static void ShowMessage(ArrayList<String> messageList) {
 		
 		resultPane.setText(messageList.toString());
+	}
+//get the message
+	public String getMessage() throws IOException{
+		String message="";
+		message = in.readLine();
+		resultPane.setText(message);
+
+		return message;
 	}
 }

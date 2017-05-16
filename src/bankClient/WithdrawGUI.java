@@ -1,7 +1,5 @@
 package bankClient;
 
-import static bankClient.ClientGUI.out;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -113,16 +111,9 @@ public class WithdrawGUI extends JFrame {
 		
 		Message message = new Message("BankMessage",
 				(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
-		ClientGUI.sendMessage(new Gson().toJson((new MessagePacket(message, RoleType.CLIENT))+"\n"));
-		//ClientGUI.sendMessage(out,(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
-		/*String message = "2#withdraw#"+withdrawAmount;
-		try {
-			out.writeUTF(message);
-			//result = in.readUTF();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
+		mainFrame.sendMessage(new Gson().toJson((new MessagePacket(message, RoleType.CLIENT))+"\n"));
+		mainFrame.getMessage();
+
 		
 	}
 }

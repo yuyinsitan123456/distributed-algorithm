@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 
 import paxosMessage.Message;
 import paxosMessage.MessagePacket;
-import paxosMessage.Promise;
 import paxosUtils.RoleType;
 
 import javax.swing.JOptionPane;
@@ -33,7 +32,7 @@ public class DepositGUI extends JFrame {
 	//private JFrame depositFrame;
 	private JTextField textField;
 	private JTextField depositAmount;
-	ClientGUI mainFrame = new ClientGUI();;
+	ClientGUI mainFrame = new ClientGUI();
 
 	
 	String result = "";
@@ -86,7 +85,10 @@ public class DepositGUI extends JFrame {
 					depositOperation(Integer.parseInt(depositAmount.getText()));
 					JOptionPane.showMessageDialog(mainFrame, "request has been sent to server!");
 					setVisible(false);
+
 					mainFrame.setVisible(true);
+					//mainFrame.getMessage();
+
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -97,6 +99,7 @@ public class DepositGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+	
 				/*if (!result.equals(null)) {
 
 					JOptionPane.showMessageDialog(mainFrame, "Deposite Done!");
@@ -133,7 +136,8 @@ public class DepositGUI extends JFrame {
 		Gson gson = new Gson();
 		Message message = new Message("BankMessage",
 				gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount))));
-		ClientGUI.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
+		mainFrame.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
+		mainFrame.getMessage();
 
 		
 	}

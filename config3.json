@@ -1,0 +1,20 @@
+{
+    "nodes" : [{
+        "id" : 1,
+        "host" : "127.0.0.1",
+        "port" : 33333
+    },{
+        "id" : 2,
+        "host" : "127.0.0.1",
+        "port" : 33334
+    },{
+        "id" : 3,
+        "host" : "127.0.0.1",
+        "port" : 33335
+    }],
+    "id" : 3,
+    "timeout" : 10000,
+    "learningTime" : 100000,
+    "dataDir" : "./dataDir/",
+    "enableDataPersistence" : false
+}

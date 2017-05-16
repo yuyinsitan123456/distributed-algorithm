@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,6 +19,7 @@ import paxosMessage.MessagePacket;
 import paxosRole.Accepter;
 import paxosRole.Learner;
 import paxosRole.Proposer;
+import paxosUtils.Broadcast;
 import paxosUtils.Config;
 import paxosUtils.FileUtils;
 import paxosUtils.MessageSendMethod;
@@ -41,8 +41,8 @@ public class PaxosServer {
 
 	public PaxosServer(String fileName) throws IOException, InterruptedException{
 		this.config=gson.fromJson(FileUtils.readFromFile(fileName), Config.class);
-		this.nodeInfo=getNodeInfo(this.config.getId(),this.config.getNodes());
 		new StateMachine(this.config.getNodes());
+		this.nodeInfo=StateMachine.getNodeInfo(this.config.getId());
 		this.serverListening = new ServerSocket(this.nodeInfo.getPort());
 		new Thread(() -> {
 			while (true) {
@@ -58,6 +58,7 @@ public class PaxosServer {
 		Accepter accepter = new Accepter(this.nodeInfo.getId(), this.config,send);
 		Proposer proposer = new Proposer(this.nodeInfo.getId(), this.config.getTimeout(),send);
 		Learner learner = new Learner(this.nodeInfo.getId(), this.config,send);
+		Broadcast broadcast = new Broadcast(this.nodeInfo.getId(), this.config,send);
 		while (true) {
 			if(!queue.isEmpty()){
 				MessagePacket messagePacket = gson.fromJson(new String(queue.take()), MessagePacket.class);
@@ -74,20 +75,14 @@ public class PaxosServer {
 				case RoleType.CLIENT:
 					proposer.setClientMessage(messagePacket.getMessage());
 					break;
+				case RoleType.SERVER:
+					broadcast.setServerMessage(messagePacket.getMessage());
+					break;
 				default:
 					break;
 				}
 			}
 		}
-	}
-
-	private NodeInfo getNodeInfo(int id,List<NodeInfo> nodes) {
-		for (NodeInfo node : nodes) {
-			if (node.getId() == this.config.getId()) {
-				return node;
-			}
-		}
-		return null;
 	}
 
 	class ReadThread implements Runnable {
@@ -116,7 +111,7 @@ public class PaxosServer {
 						while(true){
 							Object feedback=StateMachine.getClientOutput();
 							if(feedback!=null){
-								System.out.println("feedback"+feedback.toString());
+								System.out.println("feedback:"+feedback.toString());
 								writer.write(feedback.toString());
 								writer.flush();
 								break;

@@ -86,7 +86,6 @@ public class Proposer {
 
 
 	public void receivedMessage(Message message) throws InterruptedException {
-		System.out.println(message);
 		switch (message.getType()) {
 		case "Promise":
 			Promise promise = gson.fromJson(message.getInfo(),
@@ -109,9 +108,9 @@ public class Proposer {
 
 	private void prepare(int id, int instanceId, int ballot) {
 		ProcessingInstance.setState(ProceserState.PREPARE);
+		Message message = new Message("PrepareMessage", gson.toJson(new PrepareMessage(id, instanceId, ballot)));
+		String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
 		StateMachine.getNodeInfo().forEach((info) -> {
-			Message message = new Message("PrepareMessage", gson.toJson(new PrepareMessage(id, instanceId, ballot)));
-			String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
 			try {
 				this.send.sendTo(info.getHost(), info.getPort(), msg);
 			} catch (Exception e) {
@@ -152,10 +151,10 @@ public class Proposer {
 	private void accept(int id, int instanceId, int ballot, Object value) {
 		ProcessingInstance.setState(ProceserState.ACCEPT);
 		Gson gson = new Gson();
+		Message message = new Message("AcceptRequest",
+				gson.toJson(new AcceptRequest(id, instanceId, ballot, value)));
+		String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
 		StateMachine.getNodeInfo().forEach((info) -> {
-			Message message = new Message("AcceptRequest",
-					gson.toJson(new AcceptRequest(id, instanceId, ballot, value)));
-			String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
 			try {
 				this.send.sendTo(info.getHost(), info.getPort(), msg);
 			} catch (Exception e) {

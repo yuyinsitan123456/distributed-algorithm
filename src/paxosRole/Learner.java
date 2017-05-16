@@ -64,7 +64,6 @@ public class Learner {
 			LearnRequest request = gson.fromJson(message.getInfo(), LearnRequest.class);
 			if (StateMachine.getFinishedInstances().containsKey(request.getInstanceId())){
 				String value = StateMachine.getFinishedInstances().get(request.getInstanceId()).toString();
-				System.out.println(value);
 				sendResponse(request.getId(), request.getInstanceId(), value);
 			}
 			break;
@@ -92,7 +91,6 @@ public class Learner {
 	}
 
 	private void sendResponse(int learnerId, int instanceId, String value) {
-		System.out.println(value);
 		NodeInfo learner = StateMachine.getNodeInfo(learnerId);
 		try {
 			Message message = new Message("LearnResponse",
@@ -105,7 +103,6 @@ public class Learner {
 	}
 
 	private void receivedResponse(int learnerId, int instanceId, String value) {
-		System.out.println(value);
 		if (!this.tmpState.containsKey(instanceId)) {
 			this.tmpState.put(instanceId, new HashMap<>());
 		}

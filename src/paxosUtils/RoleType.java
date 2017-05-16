@@ -5,4 +5,5 @@ public class RoleType {
 	public final static String ACCEPTER="ACCEPTER";
 	public final static String LEARNER="LEARNER";
 	public final static String CLIENT="CLIENT";
+	public final static String SERVER="SERVER";
 }

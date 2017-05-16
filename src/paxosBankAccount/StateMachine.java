@@ -36,6 +36,9 @@ public class StateMachine {
 	public static void setNodeInfo(CopyOnWriteArraySet<NodeInfo> m) {
 		StateMachine.machines=m;
 	}
+	public static void addNodeInfo(NodeInfo m) {
+		StateMachine.machines.add(m);
+	}
 	public static String getState() {
 		return state;
 	}

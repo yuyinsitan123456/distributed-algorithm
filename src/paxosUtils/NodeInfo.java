@@ -5,7 +5,6 @@ public class NodeInfo {
 	private String host;
 	private int port;
 	public NodeInfo(int id, String host, int port) {
-		super();
 		this.id = id;
 		this.host = host;
 		this.port = port;

@@ -75,15 +75,12 @@ public class DepositGUI extends JFrame {
 					int depositNum = Integer.parseInt(depositAmount.getText());
 					Gson gson = new Gson();
 					Message message = new Message("BankMessage",
-							gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositNum))));
+							gson.toJson(new BankMessage("accountName", "deposit", depositNum)));
 					mainFrame.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 					mainFrame.getMessage();
-					
 					JOptionPane.showMessageDialog(mainFrame, "request has been sent to server!");
 					setVisible(false);
-
 					mainFrame.setVisible(true);
-					//mainFrame.getMessage();
 
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block

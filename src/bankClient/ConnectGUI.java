@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -110,10 +112,16 @@ public class ConnectGUI {
 		panel.add(lblErrorInfo);
 	}
 
-	private void connectToServer(String accName, String psd) {
+	private void connectToServer(String host, String port) {
 		frmLogin.setVisible(false);
-		ClientGUI mainFrame = new ClientGUI(Host.getText(),Integer.parseInt(Port.getText()));
-		mainFrame.setVisible(true);
+		ClientGUI mainFrame;
+		try{
+		    mainFrame = new ClientGUI(Host.getText(),Integer.parseInt(Port.getText()));
+			mainFrame.setVisible(true);
+		}
+		catch(Exception e){
+			JOptionPane.showMessageDialog(this.frmLogin, "Can not connect to server!");
+		}
 
 
 

@@ -59,15 +59,15 @@ public class WithdrawGUI extends JFrame {
 					int withdrawNum = Integer.parseInt(withdrawAmount.getText());
 					Gson gson = new Gson();
 					Message message = new Message("BankMessage",
-							gson.toJson(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
+							gson.toJson(new BankMessage("accountName", "withdraw", withdrawNum)));
 					//Message message = new Message("BankMessage",
 					//		(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
-					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
+					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 					mainFrame.getMessage();
-					
 					JOptionPane.showMessageDialog(mainFrame, "Withdraw request has been sent to server!");
 					setVisible(false);
 					mainFrame.setVisible(true);
+
 				} catch (NumberFormatException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

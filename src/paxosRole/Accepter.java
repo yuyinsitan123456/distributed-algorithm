@@ -45,6 +45,7 @@ public class Accepter {
 			while (true) {
 				try {
 					Message msg = msgQueue.take();
+					System.out.println(msg);
 					receivedMessage(msg);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -74,20 +75,21 @@ public class Accepter {
 		}
 	}
 
-	public void receivedPrepare(int proposerId, int instance, int ballot) throws UnknownHostException, IOException {
+	public void receivedPrepare(int proposerId, int instanceId, int ballot) throws UnknownHostException, IOException {
 		Map<Integer, Instance> instanceState=StateMachine.getInstanceState();
-		if (!instanceState.containsKey(instance)) {
-			instanceState.put(instance, new Instance(ballot, null, 0));
+		System.out.println(instanceState);
+		if (!instanceState.containsKey(instanceId)) {
+			instanceState.put(instanceId, new Instance(ballot, null, 0));
 			instancePersistence();
-			promise(proposerId, id, instance, true, 0, null);
+			promise(proposerId, id, instanceId, true, 0, null);
 		} else {
-			Instance current = instanceState.get(instance);
+			Instance current = instanceState.get(instanceId);
 			if (ballot > current.getBallot()) {
 				current.setBallot(ballot);
 				instancePersistence();
-				promise(proposerId, id, instance, true, current.getAcceptedBallot(), current.getValue());
+				promise(proposerId, id, instanceId, true, current.getAcceptedBallot(), current.getValue());
 			} else {
-				promise(proposerId, id, instance, false, current.getBallot(), null);
+				promise(proposerId, id, instanceId, false, current.getBallot(), null);
 			}
 		}
 	}
@@ -103,6 +105,7 @@ public class Accepter {
 
 	public void reseivedAccept(int proposerId, int instanceId, int ballot, Object value) throws UnknownHostException, IOException {
 		Map<Integer, Instance> instanceState=StateMachine.getInstanceState();
+		System.out.println(instanceState);
 		if (!instanceState.containsKey(instanceId)) {
 			accepted(proposerId, id, instanceId, false);
 		} else {
@@ -110,11 +113,13 @@ public class Accepter {
 			if (ballot == currentInstance.getBallot()) {
 				currentInstance.setAcceptedBallot(ballot);
 				currentInstance.setValue(value);
+				StateMachine.setCurrentInstanceId(instanceId+1);
 				StateMachine.addFinishedInstances(instanceId, value);
 				if (!instanceState.containsKey(instanceId + 1)) {
 					instanceState.put(instanceId + 1, new Instance(1, null, 0));
 				}
 				this.lastInstanceId = instanceId;
+				System.out.println(StateMachine.getFinishedInstances().toString());
 				instancePersistence();
 				accepted(proposerId, id, instanceId, true);
 			} else {
@@ -169,6 +174,7 @@ public class Accepter {
 		}.getType()));
 		instanceState.forEach((key, value) -> {
 			if (value.getValue() != null)
+				StateMachine.setCurrentInstanceId();
 				StateMachine.addFinishedInstances(key, value.getValue());
 		});
 	}

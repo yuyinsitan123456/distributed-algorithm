@@ -108,8 +108,15 @@ public class PaxosServer {
 				String message;
 				while ((message = reader.readLine())!=null) {
 					this.queue.put(message);
-					writer.write(message);
-					writer.flush();
+					while(true){
+						Object feedback=StateMachine.getClientOutput();
+						if(feedback!=null){
+							System.out.println(feedback.toString());
+							writer.write(feedback.toString());
+							writer.flush();
+							break;
+						}
+					}
 				}
 				reader.close();
 				writer.close();

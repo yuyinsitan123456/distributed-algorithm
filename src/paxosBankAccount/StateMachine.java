@@ -1,6 +1,8 @@
 package paxosBankAccount;
 
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -9,9 +11,11 @@ import paxosUtils.Instance;
 import paxosUtils.NodeInfo;
 
 public class StateMachine {
+	private static int currentInstanceId = 1;
 	private static CopyOnWriteArraySet<NodeInfo> machines=new CopyOnWriteArraySet<>();
 	private static ConcurrentMap<Integer, Instance> instanceState = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, Object> finishedInstances = new ConcurrentHashMap<>();
+	private static BlockingQueue<Object> clientOutput = new ArrayBlockingQueue<>(1);
 	private static String state;
 	public StateMachine(List<NodeInfo> machines){
 		for(NodeInfo machine:machines){
@@ -61,5 +65,24 @@ public class StateMachine {
 	}
 	public static void addFinishedInstances(Integer id, Object value) {
 		StateMachine.finishedInstances.put(id, value);
+	}
+	@Override
+	public String toString(){
+		return finishedInstances.toString();
+	}
+	public static int getCurrentInstanceId() {
+		return currentInstanceId;
+	}
+	public static void setCurrentInstanceId(int currentInstanceId) {
+		StateMachine.currentInstanceId = currentInstanceId;
+	}
+	public static void setCurrentInstanceId(){
+		StateMachine.currentInstanceId ++;
+	}
+	public static Object getClientOutput() throws InterruptedException {
+		return StateMachine.clientOutput.take();
+	}
+	public static void setClientOutput(Object message) throws InterruptedException {
+		StateMachine.clientOutput.put(message);
 	}
 }

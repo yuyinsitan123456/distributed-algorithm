@@ -22,7 +22,6 @@ import paxosUtils.ProcessingInstance;
 import paxosUtils.RoleType;
 
 public class Proposer {
-	private int currentInstanceId = 0;
 
 	private int id;
 
@@ -31,7 +30,7 @@ public class Proposer {
 	private boolean isLastSumbitSucc=false;
 	
 	private BlockingQueue<Object> tempQueue = new ArrayBlockingQueue<>(1);
-
+	
 	private BlockingQueue<Message> msgQueue = new LinkedBlockingQueue<>();
 
 	private BlockingQueue<Message> recieveClientQueue = new LinkedBlockingQueue<>();
@@ -76,18 +75,18 @@ public class Proposer {
 	}
 
 	public void beforePerpare() throws InterruptedException {
-		this.currentInstanceId++;
 		new ProcessingInstance(1, new HashSet<>(), null,0, new HashSet<>(), false, ProceserState.PREPARE);
-		ProcessingInstance.addBallot();
 		if (this.isLastSumbitSucc == false) {
-			prepare(this.id, this.currentInstanceId, ProcessingInstance.getBallot());
+			prepare(this.id, StateMachine.getCurrentInstanceId(), 1);
 		}else{
-			accept(this.id, this.currentInstanceId, ProcessingInstance.getBallot(), this.tempQueue.peek());
+			ProcessingInstance.setSucc(true);
+			accept(this.id, StateMachine.getCurrentInstanceId(), 1, this.tempQueue.peek());
 		}
 	}
 
 
 	public void receivedMessage(Message message) throws InterruptedException {
+		System.out.println(message);
 		switch (message.getType()) {
 		case "Promise":
 			Promise promise = gson.fromJson(message.getInfo(),
@@ -109,6 +108,7 @@ public class Proposer {
 	}
 
 	private void prepare(int id, int instanceId, int ballot) {
+		ProcessingInstance.setState(ProceserState.PREPARE);
 		StateMachine.getNodeInfo().forEach((info) -> {
 			Message message = new Message("PrepareMessage", gson.toJson(new PrepareMessage(id, instanceId, ballot)));
 			String msg = gson.toJson(new MessagePacket(message, RoleType.ACCEPTER));
@@ -121,7 +121,7 @@ public class Proposer {
 		setTimeout(new TimerTask() {
 			@Override
 			public void run() {
-				if (ProcessingInstance.getState() == ProceserState.PREPARE) {
+				if (ProcessingInstance.getState() == ProceserState.PREPARE&&instanceId==StateMachine.getCurrentInstanceId()) {
 					ProcessingInstance.addBallot();
 					prepare(id, instanceId, ProcessingInstance.getBallot());
 				}
@@ -141,7 +141,7 @@ public class Proposer {
 			}
 			if (ProcessingInstance.getPromiseSet().size() >= StateMachine.getNodeInfo().size() / 2 + 1) {
 				if (ProcessingInstance.getValue() == null) {
-					ProcessingInstance.setValue(acceptValue);
+					ProcessingInstance.setValue(this.tempQueue.peek());
 					ProcessingInstance.setSucc(true);
 				}
 				accept(id, instanceId, ProcessingInstance.getBallot(), ProcessingInstance.getValue());
@@ -165,7 +165,7 @@ public class Proposer {
 		setTimeout(new TimerTask() {
 			@Override
 			public void run() {
-				if (ProcessingInstance.getState() == ProceserState.ACCEPT) {
+				if (ProcessingInstance.getState() == ProceserState.ACCEPT&&instanceId==StateMachine.getCurrentInstanceId()) {
 					ProcessingInstance.addBallot();
 					prepare(id, instanceId, ProcessingInstance.getBallot());
 				}
@@ -182,7 +182,7 @@ public class Proposer {
 				done();
 				if (ProcessingInstance.isSucc()) {
 					this.isLastSumbitSucc = true;
-					this.tempQueue.poll();
+					StateMachine.setClientOutput(this.tempQueue.take());
 				} else {
 					this.isLastSumbitSucc = false;
 					beforePerpare();
@@ -199,11 +199,4 @@ public class Proposer {
 		new Timer().schedule(task, this.timeout);
 	}
 
-	public int getCurrentInstanceId() {
-		return currentInstanceId;
-	}
-
-	public void setCurrentInstanceId(int currentInstanceId) {
-		this.currentInstanceId = currentInstanceId;
-	}
 }

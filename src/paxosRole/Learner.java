@@ -27,8 +27,6 @@ public class Learner {
 
 	private Map<Integer, Map<Integer, String>> tmpState = new HashMap<>();
 
-	private int currentInstanceId = 1;
-
 	private Config config;
 
 	private ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
@@ -43,7 +41,7 @@ public class Learner {
 		this.id = id;
 		this.setConfig(config);
 		this.send = send;
-		service.scheduleAtFixedRate(() -> {sendRequest(this.id, this.currentInstanceId);} , config.getLearningTime(), config.getLearningTime(), TimeUnit.MILLISECONDS);
+		service.scheduleAtFixedRate(() -> {sendRequest(this.id,StateMachine.getCurrentInstanceId());} , config.getLearningTime(), config.getLearningTime(), TimeUnit.MILLISECONDS);
 		new Thread(() -> {
 			while (true) {
 				try {
@@ -129,9 +127,9 @@ public class Learner {
 				} else {
 					StateMachine.changeInstanceState(instanceId,tempValue);
 				}
-				if (instanceId == currentInstanceId) {
+				if (instanceId == StateMachine.getCurrentInstanceId()) {
 					StateMachine.changeState(instanceId);
-					currentInstanceId++;
+					StateMachine.setCurrentInstanceId();
 				}
 			}
 		});

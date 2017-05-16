@@ -39,4 +39,8 @@ public class Instance {
 	public void setAcceptedBallot(int acceptedBallot) {
 		this.acceptedBallot = acceptedBallot;
 	}
+	@Override
+	public String toString(){
+		return ballot+acceptedBallot+"";
+	}
 }

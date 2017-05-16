@@ -1,7 +1,14 @@
+/*COMP90020 project assessment
+ * 2017
+ * Group member :
+ * 732355 
+ * 732329
+ * 776991
+ * 756344
+ * */
 package bankClient;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

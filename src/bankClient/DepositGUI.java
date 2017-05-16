@@ -1,3 +1,12 @@
+
+/*COMP90020 project assessment
+ * 2017
+ * Group member :
+ * 732355 
+ * 732329
+ * 776991
+ * 756344
+ * */
 package bankClient;
 
 

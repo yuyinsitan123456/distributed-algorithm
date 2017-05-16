@@ -1,3 +1,11 @@
+/*COMP90020 project assessment
+ * 2017
+ * Group member :
+ * 732355 
+ * 732329
+ * 776991
+ * 756344
+ * */
 package bankClient;
 
 import java.awt.BorderLayout;
@@ -98,9 +106,13 @@ public class ClientGUI extends JFrame {
 		btnBanlace.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					ClientGUI mainFrame = new ClientGUI(host,port);
 					Message message = new Message("BankMessage",
 							(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
-					sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
+					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
+					mainFrame.getMessage();
+					setVisible(false);
+					mainFrame.setVisible(true);
 					
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block

@@ -25,28 +25,14 @@ public class WithdrawGUI extends JFrame {
 	private JPanel contentPane;
 	private JTextField withdrawAmount;
 	String result = "";
-	ClientGUI mainFrame = new ClientGUI();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WithdrawGUI withdrawframe = new WithdrawGUI();
-					withdrawframe.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
 	 */
-	public WithdrawGUI() {
+	public WithdrawGUI(String host, int port) {
+		ClientGUI mainFrame = new ClientGUI(host,port);
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -63,7 +49,13 @@ public class WithdrawGUI extends JFrame {
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
+					//withdrawOperation(Integer.parseInt(withdrawAmount.getText()));
+					int withdrawNum = Integer.parseInt(withdrawAmount.getText());
+					Message message = new Message("BankMessage",
+							(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
+					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
+					mainFrame.getMessage();
+					
 					JOptionPane.showMessageDialog(mainFrame, "Withdraw request has been sent to server!");
 					setVisible(false);
 					mainFrame.setVisible(true);
@@ -78,11 +70,7 @@ public class WithdrawGUI extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				/*if (!result.equals(null)) {
-					JOptionPane.showMessageDialog(mainFrame, "Withdraw request has send to server!");
-					setVisible(false);
-					mainFrame.setVisible(true);
-				}*/
+
 			}
 		});
 		btnEnter.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -106,14 +94,4 @@ public class WithdrawGUI extends JFrame {
 		panel.add(btnBack);
 	}
 	
-	//withdraw operation: sending withdraw amount to server and receive results
-	public void withdrawOperation(int withdrawAmount) throws UnknownHostException, IOException{
-		
-		Message message = new Message("BankMessage",
-				(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawAmount))));
-		mainFrame.sendMessage(new Gson().toJson((new MessagePacket(message, RoleType.CLIENT))+"\n"));
-		mainFrame.getMessage();
-
-		
-	}
 }

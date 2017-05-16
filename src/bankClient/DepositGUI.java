@@ -1,26 +1,21 @@
 package bankClient;
 
 
-import java.awt.EventQueue;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
-
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import com.google.gson.Gson;
-
 import paxosMessage.Message;
 import paxosMessage.MessagePacket;
 import paxosUtils.RoleType;
-
 import javax.swing.JOptionPane;
 
 @SuppressWarnings("serial")
@@ -32,31 +27,17 @@ public class DepositGUI extends JFrame {
 	//private JFrame depositFrame;
 	private JTextField textField;
 	private JTextField depositAmount;
-	ClientGUI mainFrame = new ClientGUI();
+
 
 	
 	String result = "";
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					DepositGUI depositFrame = new DepositGUI();
-					depositFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
 	 */
-	public DepositGUI() {
-		
+	public DepositGUI(String host, int port) {
+		ClientGUI mainFrame = new ClientGUI(host,port);
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -82,7 +63,14 @@ public class DepositGUI extends JFrame {
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					depositOperation(Integer.parseInt(depositAmount.getText()));
+					//depositOperation(Integer.parseInt(depositAmount.getText()));
+					int depositNum = Integer.parseInt(depositAmount.getText());
+					Gson gson = new Gson();
+					Message message = new Message("BankMessage",
+							gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositNum))));
+					mainFrame.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
+					mainFrame.getMessage();
+					
 					JOptionPane.showMessageDialog(mainFrame, "request has been sent to server!");
 					setVisible(false);
 
@@ -99,14 +87,7 @@ public class DepositGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	
-				/*if (!result.equals(null)) {
 
-					JOptionPane.showMessageDialog(mainFrame, "Deposite Done!");
-					setVisible(false);
-					mainFrame.setVisible(true);
-					mainFrame.result = result;			
-				}*/
 			}
 		});
 		btnEnter.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -133,11 +114,7 @@ public class DepositGUI extends JFrame {
 	//deposit operation: sending deposit amount to server and receive results
 	
 	public void depositOperation(int depositAmount) throws UnknownHostException, IOException{
-		Gson gson = new Gson();
-		Message message = new Message("BankMessage",
-				gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositAmount))));
-		mainFrame.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
-		mainFrame.getMessage();
+
 
 		
 	}

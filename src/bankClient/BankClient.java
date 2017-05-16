@@ -14,10 +14,10 @@ public class BankClient {
 	private  Socket clientSocket;
 	private BufferedReader in;
 	private BufferedWriter out;
-	public BankClient() throws UnsupportedEncodingException, IOException {
+	public BankClient(String host, int port) throws UnsupportedEncodingException, IOException {
 		super();
 		this.clientID = "JZ";
-		this.clientSocket = new Socket("localhost", 33333);
+		this.clientSocket = new Socket(host, port);
 		this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
 		this.out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"));
 	}

@@ -1,7 +1,14 @@
+/*COMP90020 project assessment
+ * 2017
+ * Group member :
+ * 732355 
+ * 732329
+ * 776991
+ * 756344
+ * */
 package bankClient;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,36 +45,16 @@ public class ClientGUI extends JFrame {
 
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ClientGUI mainframe = new ClientGUI();
-					mainframe.setVisible(true);
-
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public ClientGUI() {
+	public ClientGUI(String host, int port) {
 		try {
-			client = new BankClient();
+			client = new BankClient(host,port);
 		} catch (UnsupportedEncodingException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 		in = client.getIn();
@@ -94,7 +81,7 @@ public class ClientGUI extends JFrame {
 		btnDeposit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                DepositGUI depositFrame = new DepositGUI();
+                DepositGUI depositFrame = new DepositGUI(host,port);
                 depositFrame.setVisible(true);
 			}
 		});
@@ -106,7 +93,7 @@ public class ClientGUI extends JFrame {
 		btnWithdraw.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-                WithdrawGUI withdrawFrame = new WithdrawGUI();
+                WithdrawGUI withdrawFrame = new WithdrawGUI(host,port);
                 withdrawFrame.setVisible(true);
 			}
 		});
@@ -119,9 +106,13 @@ public class ClientGUI extends JFrame {
 		btnBanlace.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					ClientGUI mainFrame = new ClientGUI(host,port);
 					Message message = new Message("BankMessage",
 							(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
-					sendMessage(new Gson().toJson((new MessagePacket(message, RoleType.CLIENT))+"\n"));
+					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
+					mainFrame.getMessage();
+					setVisible(false);
+					mainFrame.setVisible(true);
 					
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
@@ -130,14 +121,7 @@ public class ClientGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
-				/*try {
-
-					result = in.readLine();
-					resultPane.setText("current balance is: "+ result+ "\n");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}*/		
+		
 			}
 		});
 		btnBanlace.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -162,21 +146,20 @@ public class ClientGUI extends JFrame {
 		resultPane = new JTextPane();
 		resultPane.setFont(new Font("Arial", Font.PLAIN, 16));
 		scrollPane.setViewportView(resultPane);
-		//resultPane.setText("123");
-		//resultPane.setText("456");
+
 	}
-//send the message to server
+	//send the message to server
 	public void sendMessage( String msg) throws UnknownHostException, IOException {
 		out.write(msg);
 		out.flush();
 	}
 	
-//show the messages from server on textPane
+	//show the messages from server on textPane
 	public static void ShowMessage(ArrayList<String> messageList) {
 		
 		resultPane.setText(messageList.toString());
 	}
-//get the message
+	//get the message
 	public String getMessage() throws IOException{
 		String message="";
 		message = in.readLine();

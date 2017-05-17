@@ -177,11 +177,12 @@ public class Proposer {
 			return;
 		if (ok) {
 			ProcessingInstance.addAcceptSet(acceptorId);
-			if (ProcessingInstance.getAcceptSet().size() >= StateMachine.getNodeInfo().size() / 2 + 1) {
+			if (ProcessingInstance.getAcceptSet().size() >= (StateMachine.getNodeInfo().size() / 2) + 1) {
 				done();
 				if (ProcessingInstance.isSucc()) {
 					this.isLastSumbitSucc = true;
-					StateMachine.setClientOutput(this.tempQueue.take());
+					this.tempQueue.poll();
+					StateMachine.setClientOutput(StateMachine.getFinishedInstances());
 				} else {
 					this.isLastSumbitSucc = false;
 					beforePerpare();

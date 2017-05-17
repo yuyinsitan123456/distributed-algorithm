@@ -40,7 +40,6 @@ public class MessageReceiveThread implements Runnable{
 			while (run) {
 				String message = in.readLine();
 				messageList.add(message);
-				ClientGUI.ShowMessage(this.messageList);
 			}
 
 			System.exit(0);

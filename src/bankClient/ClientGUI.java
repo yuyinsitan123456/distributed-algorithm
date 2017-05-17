@@ -109,7 +109,7 @@ public class ClientGUI extends JFrame {
 					ClientGUI mainFrame = new ClientGUI(host,port);
 					Message message = new Message("BankMessage",
 							(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
-					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT)+"\n"));
+					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 					mainFrame.getMessage();
 					setVisible(false);
 					mainFrame.setVisible(true);
@@ -154,17 +154,11 @@ public class ClientGUI extends JFrame {
 		out.flush();
 	}
 	
-	//show the messages from server on textPane
-	public static void ShowMessage(ArrayList<String> messageList) {
-		
-		resultPane.setText(messageList.toString());
-	}
 	//get the message
 	public String getMessage() throws IOException{
 		String message="";
 		message = in.readLine();
 		resultPane.setText(message);
-
 		return message;
 	}
 }

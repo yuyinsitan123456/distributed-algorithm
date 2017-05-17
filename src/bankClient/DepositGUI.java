@@ -72,19 +72,15 @@ public class DepositGUI extends JFrame {
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					//depositOperation(Integer.parseInt(depositAmount.getText()));
 					int depositNum = Integer.parseInt(depositAmount.getText());
 					Gson gson = new Gson();
 					Message message = new Message("BankMessage",
-							gson.toJson(new Gson().toJson(new BankMessage("accountName", "deposit", depositNum))));
+							gson.toJson(new BankMessage("accountName", "deposit", depositNum)));
 					mainFrame.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 					mainFrame.getMessage();
-					
 					JOptionPane.showMessageDialog(mainFrame, "request has been sent to server!");
 					setVisible(false);
-
 					mainFrame.setVisible(true);
-					//mainFrame.getMessage();
 
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
@@ -120,12 +116,6 @@ public class DepositGUI extends JFrame {
 		getContentPane().add(btnBack);
 	}
 	
-	//deposit operation: sending deposit amount to server and receive results
-	
-	public void depositOperation(int depositAmount) throws UnknownHostException, IOException{
 
-
-		
-	}
 
 }

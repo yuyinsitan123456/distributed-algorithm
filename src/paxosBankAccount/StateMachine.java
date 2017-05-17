@@ -37,6 +37,11 @@ public class StateMachine {
 		StateMachine.machines=m;
 	}
 	public static void addNodeInfo(NodeInfo m) {
+		for (NodeInfo each : machines) {
+			if (m.getId() == each.getId()) {
+				return ;
+			}
+		}
 		StateMachine.machines.add(m);
 	}
 	public static String getState() {

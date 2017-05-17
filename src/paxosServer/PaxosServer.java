@@ -112,7 +112,7 @@ public class PaxosServer {
 							Object feedback=StateMachine.getClientOutput();
 							if(feedback!=null){
 								System.out.println("feedback:"+feedback.toString());
-								writer.write(feedback.toString());
+								writer.write(feedback.toString()+"\n");
 								writer.flush();
 								break;
 							}

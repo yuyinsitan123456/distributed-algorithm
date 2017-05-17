@@ -1,6 +1,5 @@
 package paxosRole;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -92,14 +91,10 @@ public class Learner {
 
 	private void sendResponse(int learnerId, int instanceId, String value) {
 		NodeInfo learner = StateMachine.getNodeInfo(learnerId);
-		try {
-			Message message = new Message("LearnResponse",
-					gson.toJson(new LearnResponse(id, instanceId, value)));
-			this.send.sendTo(learner.getHost(), learner.getPort(),
-					gson.toJson(new MessagePacket(message, RoleType.LEARNER)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Message message = new Message("LearnResponse",
+				gson.toJson(new LearnResponse(id, instanceId, value)));
+		this.send.sendTo(learner.getHost(), learner.getPort(),
+				gson.toJson(new MessagePacket(message, RoleType.LEARNER)));
 	}
 
 	private void receivedResponse(int learnerId, int instanceId, String value) {
@@ -123,9 +118,9 @@ public class Learner {
 				StateMachine.addFinishedInstances(instanceId, tempValue);
 				boolean ok=StateMachine.getInstanceState().containsKey(instanceId);
 				if (ok) {
-					StateMachine.addInstanceState(instanceId,new Instance(1, tempValue, 1));
-				} else {
 					StateMachine.changeInstanceState(instanceId,tempValue);
+				} else {
+					StateMachine.addInstanceState(instanceId,new Instance(1, tempValue, 1));
 				}
 				if (instanceId == StateMachine.getCurrentInstanceId()) {
 					StateMachine.changeState(instanceId);
@@ -133,6 +128,7 @@ public class Learner {
 				}
 			}
 		});
+		System.out.println(StateMachine.getFinishedInstances());
 	}
 
 	public Config getConfig() {

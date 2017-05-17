@@ -62,9 +62,9 @@ public class ClientGUI extends JFrame {
 		setTitle("Client");
 		//JFrame mainframe = new JFrame();
 		setFont(new Font("Arial", Font.PLAIN, 16));
-		setBounds(100, 100, 455, 359);
+		setBounds(100, 100, 877, 388);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		setLocationRelativeTo(null);
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
@@ -108,7 +108,7 @@ public class ClientGUI extends JFrame {
 				try {
 					ClientGUI mainFrame = new ClientGUI(host,port);
 					Message message = new Message("BankMessage",
-							(new Gson().toJson(new BankMessage("accountName", "balance", 0))));
+							(new Gson().toJson(new BankMessage("jzzzz", "balance", 0))));
 					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 					mainFrame.getMessage();
 					setVisible(false);
@@ -139,7 +139,7 @@ public class ClientGUI extends JFrame {
 		panel_1.add(btnExit);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(155, 21, 253, 244);
+		scrollPane.setBounds(155, 21, 675, 275);
 		panel.add(scrollPane);
 		scrollPane.setBorder(BorderFactory.createTitledBorder("Results"));
 		

@@ -50,7 +50,7 @@ public class DepositGUI extends JFrame {
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
+		setLocationRelativeTo(null);
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 434, 1);
 		panel.setLayout(null);
@@ -75,7 +75,7 @@ public class DepositGUI extends JFrame {
 					int depositNum = Integer.parseInt(depositAmount.getText());
 					Gson gson = new Gson();
 					Message message = new Message("BankMessage",
-							gson.toJson(new BankMessage("accountName", "deposit", depositNum)));
+							gson.toJson(new BankMessage("jzzzz", "deposit", depositNum)));
 					mainFrame.sendMessage(gson.toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
 					mainFrame.getMessage();
 					JOptionPane.showMessageDialog(mainFrame, "request has been sent to server!");

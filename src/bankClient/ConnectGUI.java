@@ -66,7 +66,7 @@ public class ConnectGUI {
 		frmLogin.setTitle("Login");
 		frmLogin.setBounds(100, 100, 450, 300);
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		frmLogin.setLocationRelativeTo(null); 
 		JPanel panel = new JPanel();
 		frmLogin.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);

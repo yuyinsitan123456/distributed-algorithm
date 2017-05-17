@@ -42,7 +42,7 @@ public class WithdrawGUI extends JFrame {
 		ClientGUI mainFrame = new ClientGUI(host,port);
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		setLocationRelativeTo(null);
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
@@ -59,7 +59,7 @@ public class WithdrawGUI extends JFrame {
 					int withdrawNum = Integer.parseInt(withdrawAmount.getText());
 					Gson gson = new Gson();
 					Message message = new Message("BankMessage",
-							gson.toJson(new BankMessage("accountName", "withdraw", withdrawNum)));
+							gson.toJson(new BankMessage("jzzzz", "withdraw", withdrawNum)));
 					//Message message = new Message("BankMessage",
 					//		(new Gson().toJson(new BankMessage("accountName", "withdraw", withdrawNum))));
 					mainFrame.sendMessage(new Gson().toJson(new MessagePacket(message, RoleType.CLIENT))+"\n");
